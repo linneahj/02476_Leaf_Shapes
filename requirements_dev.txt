@@ -12,3 +12,6 @@ mkdocs <= 1.5.3
 mkdocs-material <= 9.4.6
 mkdocstrings <= 0.23.0
 mkdocstrings[python]>=0.18
+
+# data version control
+dvc >= 3.38.1
