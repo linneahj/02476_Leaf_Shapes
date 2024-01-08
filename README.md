@@ -1,6 +1,28 @@
-# leaf_shapes
+# Leaf Shapes
 
 Final project for group 48 in the DTU course 02476 MLOps.
+
+*s194354 Line Glade, s153189 Linnea Hjordt Juul & s231733 Dominik Dvoracek*
+
+## Project description
+
+### Goal
+The goal of the project is to employ the material presented in this course on a small-scale real-world project, by creating a pipeline for all the stages of a Machine Learning Model's lifecycle including code and data version control, experiment reproducibility, code optimization, testing, debugging and logging. These are all elements of the continuous integration. We also plan to deploy the model using a cloud solution. We aim to monitor the activity of the model after deployment. 
+We will also examine and evaluate the scalability of the model.
+
+The project in question aims to identify different types of trees by using image classification on images of apple leaves.
+
+### Framework
+Along with the Pytorch framework we plan to use the Pytorch Image Models framework (TIMM) as this framework is useful for working with images. Some relevant models are EfficientNet or ResNet 18, but this depends highly on what can be run on the limited resources of our personal computers.
+
+For the structure of the project we used the cookiecutter template, as shown below. We also used dvc for data version control. This list will be updated as we implement more frameworks.
+
+### Data
+We are working with the dataset for the [Leaf Classification Competition](https://www.kaggle.com/c/leaf-classification/data) on Kaggle. The dataset consists of a training set with 990 images tree leaves. Additionally, we are given other measures of the leaves, but due to the scope of this project we have chosen to focus only on image classification. There is also a test set consisting of 594 images and features, however we will not be using this set, since this is mainly relevant for participating in the Kaggle Competition. In the training set there are a total of 99 different tree species with 10 images of each species.
+
+### Models
+Since we are working with images, an obvious starting point is to create a CNN. For this we can make use of the ResNet18 architecture from TIMM, which is a convolutional neural network architecture and scaling method. However, we are quite restricted by the processing power on our personal computers, as mentioned earlier.
+
 
 ## Project structure
 
