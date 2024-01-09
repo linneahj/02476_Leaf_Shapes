@@ -6,9 +6,10 @@ from PIL import Image, ImageOps
 import pandas as pd
 #from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import LabelEncoder
-from skimage.io import imread
+from skimage.io import imread, imsave
 from skimage.transform import resize
 import torch
+import matplotlib.pyplot as plt
 #matplotlib.use('Agg')
 
 
@@ -92,7 +93,7 @@ class Data_processor():
         # need to reformat the train for validation split reasons in the batch_generator
         self.train_set_dict = self._format_dataset(train_data)
         self.test_set_dict = self._format_dataset(test_data)
-        
+
 
 
     def _path_to_dict(self): # From original script
@@ -170,6 +171,67 @@ class Data_processor():
 
         # Store training data in a proper dataset
         return torch.utils.data.TensorDataset(images,labels)
+    
+
+    def _for_TIMM(self, dataset_dict):
+        ''' '''
+
+         #Store images and targets separately
+        np_images_list = dataset_dict['images']
+        np_targets_list = dataset_dict['targets']
+
+        # concatenate images to be stacked
+        images_np_temp = np.concatenate(np_images_list,axis=2)
+        # Move axis such that the index comes first
+        images_np=np.moveaxis(images_np_temp,-1,0)
+
+        # Convert to tensors
+        #images = torch.from_numpy(images_np)
+        #labels_encoded = torch.from_numpy(np_targets_list)
+        labels = self.encoding.inverse_transform(np_targets_list)
+        print(labels.shape)
+
+        # Unsqueeze for proper dimensions for models
+        #images = images.unsqueeze(1)
+
+        ''' This is a test - I think TIMM wants images saved in folders!"'''
+        for i in range(0,images_np.shape[0]): # Number of samples
+            image = images_np[i]
+            print(image.shape)
+            label = labels[i]
+
+            if (not os.path.exists(self.base_path + 'TIMM')):
+                os.mkdir(self.base_path + 'TIMM') 
+            
+            path = self.base_path + 'TIMM/' + f'{label}'
+            print(path)
+            
+            if (not os.path.exists(path)):
+                os.mkdir(path) 
+            
+            #imsave(path  + f'/{i}.png', image.astype(np.uint8))
+            plt.imshow(image, cmap="gray")
+            print(f"Label: {label}")
+            #plt.show()
+
+            plt.imsave(path  + f'/{i}.png', image)
+            
+            #new_p = Image.fromarray(image)
+            #new_p = new_p.convert("L")
+            #im = Image.fromarray(image)
+            #new_p.save(path  + f'/{i}.png')
+
+            #plt.imshow(new_p, cmap="gray")
+            #print(f"Label: {label}")
+            #plt.show()
+
+
+       
+
+
+  
+
+        
         
 
     def _make_and_save_tensor_datasets(self):
@@ -178,6 +240,10 @@ class Data_processor():
 
         self.test_set = self._make_tensor_dataset(self.test_set_dict)
         torch.save(self.training_set, self.base_path + '/processed/test_dataset.pt')
+
+
+    
+
 
 
 if __name__ == '__main__':
@@ -193,6 +259,9 @@ if __name__ == '__main__':
     # Optimize this to be built into the make_data thingy.
     data = Data_processor(BASE_PATH, image_paths=IMAGE_PATHS,image_shape=IMAGE_SHAPE[:2])
     data.process()
+    data._for_TIMM(data.train_set_dict)
+
+
     
    
     
