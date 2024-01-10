@@ -1,16 +1,10 @@
-# Importing packages
-import glob
 import os
+from skimage.io import imread
 import numpy as np
-from PIL import Image, ImageOps
 import pandas as pd
-#from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import LabelEncoder
-from skimage.io import imread, imsave
 from skimage.transform import resize
-import torch
-import matplotlib.pyplot as plt
-#matplotlib.use('Agg')
+from PIL import Image, ImageOps
+import matplotlib.pyplot as plt #skimage.io wants greyscale images in range [0,1], but plt seems to work fine
 
 
 def pad2square(img):  #Inherited from ealier implementation
@@ -23,33 +17,20 @@ def pad2square(img):  #Inherited from ealier implementation
     new_img = ImageOps.expand(img_as_img, padding)
     return np.array(new_img)
 
-
 class Data_processor():
-    def __init__(self, base_path, image_paths, image_shape=(128, 128)):
+    def __init__(self, path_to_base_csv = "./data/raw/train.csv", image_paths = "./data/raw/images/", output_path = "./data/processed", image_shape=(128, 128)):
 
-        self.base_path = base_path
-        self.base_csv_path = base_path + "raw/train.csv" # TODO: This file should be renamed to data.csv
-        self.image_paths = image_paths
+        self.base_csv_path = path_to_base_csv # TODO: This file should be renamed to data.csv
+        self.output_path = output_path
+        self.path_to_images = image_paths
         self.image_shape = image_shape
 
-        self.training_csv_path = base_path + "processed/train.csv"
-        self.test_csv_path = base_path + "processed/test.csv"
+        self.training_csv_path = output_path + '/labelled_training_data.csv' 
+        self.test_csv_path = output_path + "/labelled_test_data.csv"
         
-        self.encoding = None # Encodes each label to a number, set in load()
         self.train_df = None # Dataframes holding raw data - set in make _split_into_train_test
         self.test_df = None # Dataframes holding raw data - set in make _split_into_train_test
 
-        self.train_set_dict = None
-        self.test_set_dict = None
-
-        self.training_set = None # for storing processed datasets
-        self.test_set = None # for storing processed datasets
-
-
-    def process(self):
-        self._split_into_train_test()
-        self._load_raw_data()
-        self._make_and_save_tensor_datasets()
 
 
     def _split_into_train_test(self):
@@ -57,214 +38,64 @@ class Data_processor():
         Reads all id's and labels from original csv file and splits it into test data and training data. 
         For simplicity, the last 10 % of the entries in the original csv file with randomized data are chosen for test data.
         '''
+        # Load csv containing all labelled data
         df = pd.read_csv(self.base_csv_path) # names=['id','species']
         
-        # Choosing last 99 images to be the test-set
-        # Original .csv files only had labels for training - none for testing, thus we cannot use the original test.csv
-        # We will use only the images for classifying the plant species
-        header = df.columns[0:2]
-        self.train_df = pd.DataFrame(df[header].values[0:891],columns=header)
-        self.test_df = pd.DataFrame(df[header].values[891:],columns=header)
-        self.train_df.to_csv(self.training_csv_path)
-        self.test_df.to_csv(self.test_csv_path)
+        # Splitting 
+        header = df.columns[0:2] # We will use only the images for classifying the plant species, thus all other features can be ignored
+        train_df = pd.DataFrame(df[header].values[0:891],columns=header)
+        test_df = pd.DataFrame(df[header].values[891:],columns=header)  # Choosing last 99 images to be the test-set
 
- 
-    def _load_raw_data(self):  # From original script, but refactored
-        # load train.csv
-        path_dict = self._path_to_dict() # numerate image paths and make it a dict
-        # merge image paths with data frame
-        train_image_df = self._merge_image_df(self.train_df, path_dict)
-        test_image_df = self._merge_image_df(self.test_df, path_dict)
+        # Save image paths
+        train_df["path_to_image"] = ""
+        test_df["path_to_image"] = ""
+        
+        for index, (id, _, _) in train_df.iterrows(): # Images must be stored in the given path using the format {id}.jpg
+            train_df["path_to_image"][index] = self.path_to_images + f'{id}' + '.jpg'
 
-        self.encoding  = LabelEncoder().fit(train_image_df['species'])
-        pd.DataFrame(self.encoding.classes_).to_csv('./data/processed/Class_ids.csv')
+        for index, (id, _, _) in test_df.iterrows(): # Images must be stored in the given path using the format {id}.jpg
+            test_df["path_to_image"][index] = self.path_to_images + f'{id}' + '.jpg'
 
-        # labels for train
-        t_train = self.encoding.transform(train_image_df['species'])
-        t_test = self.encoding.transform(test_image_df['species'])
+        self.train_df = train_df
+        self.test_df = test_df
+        
+        # Save to have as an overview
+        train_df.to_csv(self.training_csv_path)
+        test_df.to_csv(self.test_csv_path)
 
-        # TODO: load images and format data seems unescescarily complicated, try to simplify
-        # getting data
-        print("Loading training data")
-        train_data = self._load_images_into_dict(train_image_df, self.image_shape, t_train)
-        print("Loading test data")
-        test_data = self._load_images_into_dict(test_image_df, self.image_shape, t_test)
+        return train_df, test_df
 
-        # need to reformat the train for validation split reasons in the batch_generator
-        self.train_set_dict = self._format_dataset(train_data)
-        self.test_set_dict = self._format_dataset(test_data)
+    def _create_data(self, df, output_path, image_shape):
+        ''' loads all images in df, processes them and saves in given path'''
+        for _, (id, species, path) in df.iterrows(): 
+            image = imread(path, as_gray=True) # load image
 
-
-
-    def _path_to_dict(self): # From original script
-        path_dict = dict()
-        for image_path in self.image_paths:
-            num_path = int(os.path.basename(image_path[:-4]))
-            path_dict[num_path] = image_path
-        return path_dict
-
-    def _merge_image_df(self, df, path_dict):  # From original script
-        split_path_dict = dict()
-        for index, row in df.iterrows():
-            #print(f'Row: {row}, index: {index}')
-            #print(f"Test: {row['id']}")
-            split_path_dict[row['id']] = path_dict[row['id']]
-        image_frame = pd.DataFrame(list(split_path_dict.values()), columns=['image'])
-        df_image =  pd.concat([image_frame, df], axis=1)
-        return df_image
-
-    def _load_images_into_dict(self, df, image_shape, targets):  # From original script
-        # make dataset
-        data = dict()
-        # merge image with 3x64 features
-        for i, dat in enumerate(df.iterrows()):
-            index, row = dat
-            sample = dict()
-            sample['t'] = np.asarray(targets[i], dtype='int32')
-            image = imread(row['image'], as_gray=True)
+            # Process
             image = pad2square(image)
             image = resize(image, output_shape=image_shape, mode='reflect', anti_aliasing=True)
-            image = np.expand_dims(image, axis=2)
-            sample['image'] = image
-            data[row['id']] = sample
-            if i % 100 == 0:
-                print("\t%d of %d" % (i, len(df)))
-        print(data.values)
+            #image = np.expand_dims(image, axis=0)
 
-        return data
+            base_path = output_path + '/TIMM/'
+            path = output_path + f'/TIMM/{species}'
+            if (not os.path.exists(base_path)):
+                    os.mkdir(base_path) 
 
-    def _format_dataset(self, df):  # From original script
-        # making arrays with all data in, is nessesary when doing validation split
-        data = dict()
-        value = list(df.values())[0]
-        img_tot_shp = tuple([len(df)] + list(value['image'].shape))
-        data['images'] = np.zeros(img_tot_shp, dtype='float32')
-
-    
-        data['targets'] = np.zeros((len(df),), dtype='int32')
-        
-        for i, pair in enumerate(df.items()):
-            _, value = pair
-            data['images'][i] = value['image']
-            data['targets'][i] = value['t']
-            
-        return data
-    
-    def _make_tensor_dataset(self, dataset_dict):
-        ''' Takes the data set produced from _format_dataset() and makes it into a TensorDataset'''
-
-         #Store images and targets separately
-        np_images_list = dataset_dict['images']
-        np_targets_list = dataset_dict['targets']
-
-        # concatenate images to be stacked
-        images_np_temp = np.concatenate(np_images_list,axis=2)
-        # Move axis such that the index comes first
-        images_np=np.moveaxis(images_np_temp,-1,0)
-
-        # Convert to tensors
-        images = torch.from_numpy(images_np)
-        labels = torch.from_numpy(np_targets_list)
-
-        # Unsqueeze for proper dimensions for models
-        images = images.unsqueeze(1)
-
-        # Store training data in a proper dataset
-        return torch.utils.data.TensorDataset(images,labels)
-    
-
-    def _for_TIMM(self, dataset_dict):
-        ''' '''
-
-         #Store images and targets separately
-        np_images_list = dataset_dict['images']
-        np_targets_list = dataset_dict['targets']
-
-        # concatenate images to be stacked
-        images_np_temp = np.concatenate(np_images_list,axis=2)
-        # Move axis such that the index comes first
-        images_np=np.moveaxis(images_np_temp,-1,0)
-
-        # Convert to tensors
-        #images = torch.from_numpy(images_np)
-        #labels_encoded = torch.from_numpy(np_targets_list)
-        labels = self.encoding.inverse_transform(np_targets_list)
-        print(labels.shape)
-
-        # Unsqueeze for proper dimensions for models
-        #images = images.unsqueeze(1)
-
-        ''' This is a test - I think TIMM wants images saved in folders!"'''
-        for i in range(0,images_np.shape[0]): # Number of samples
-            image = images_np[i]
-            print(image.shape)
-            label = labels[i]
-
-            if (not os.path.exists(self.base_path + 'TIMM')):
-                os.mkdir(self.base_path + 'TIMM') 
-            
-            path = self.base_path + 'TIMM/' + f'{label}'
-            print(path)
-            
             if (not os.path.exists(path)):
-                os.mkdir(path) 
-            
-            #imsave(path  + f'/{i}.png', image.astype(np.uint8))
-            plt.imshow(image, cmap="gray")
-            print(f"Label: {label}")
-            #plt.show()
-
-            plt.imsave(path  + f'/{i}.png', image)
-            
-            #new_p = Image.fromarray(image)
-            #new_p = new_p.convert("L")
-            #im = Image.fromarray(image)
-            #new_p.save(path  + f'/{i}.png')
-
-            #plt.imshow(new_p, cmap="gray")
-            #print(f"Label: {label}")
-            #plt.show()
-
-
-       
-
-
-  
-
+                    os.mkdir(path) 
         
+            #plt.imshow(image, cmap="gray")
+            plt.imsave(path  + f'/{id}.png', image, cmap='gray')
+                   
+            
+    def process(self):
+        self._split_into_train_test()
+        self._create_data(self.train_df, self.output_path, self.image_shape)
+        # If test also
+        #self.__create_data(self.train_df, self.output_path + '/test_images', self.image_shape)
         
-
-    def _make_and_save_tensor_datasets(self):
-        self.training_set = self._make_tensor_dataset(self.train_set_dict)
-        torch.save(self.training_set, self.base_path + '/processed/train_dataset.pt')
-
-        self.test_set = self._make_tensor_dataset(self.test_set_dict)
-        torch.save(self.training_set, self.base_path + '/processed/test_dataset.pt')
-
-
-    
-
 
 
 if __name__ == '__main__':
-    # Get the data and process it
-    IMAGE_SHAPE = (50,50,1)  # Add hydra hyperparameter control here
-    NUM_CLASSES = 99   # Also hydra-something here
-
-    BASE_PATH = "./data/"
-    IMAGE_PATHS = glob.glob("./data/raw/images/*.jpg")
-
-
-    # TO DO:
-    # Optimize this to be built into the make_data thingy.
-    data = Data_processor(BASE_PATH, image_paths=IMAGE_PATHS,image_shape=IMAGE_SHAPE[:2])
-    data.process()
-    data._for_TIMM(data.train_set_dict)
-
-
-    
-   
-    
-
-
-    
+#  Original .csv files only had labels for training - none for testing, thus we cannot use the original test.csv and all our data is in train.csv
+    data_procesor = Data_processor("./data/raw/train.csv", "./data/raw/images/", "./data/processed")
+    data_procesor.process()
