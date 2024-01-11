@@ -1,0 +1,7 @@
+# config.yaml
+hyperparameters:
+  model: resnet18
+  epochs: 5
+  lr: 1e-4
+  image_shape: [128, 128]
+  seed: 48

@@ -5,7 +5,11 @@ import pandas as pd
 from skimage.transform import resize
 from PIL import Image, ImageOps
 import matplotlib.pyplot as plt #skimage.io wants greyscale images in range [0,1], but plt seems to work fine
+import hydra
+from omegaconf import OmegaConf
 
+# Importing hyperparameters (config)
+config = OmegaConf.load('config.yaml')
 
 def pad2square(img):  #Inherited from ealier implementation
     img_shape = img.shape
@@ -18,7 +22,7 @@ def pad2square(img):  #Inherited from ealier implementation
     return np.array(new_img)
 
 class Data_processor():
-    def __init__(self, path_to_base_csv = "./data/raw/train.csv", image_paths = "./data/raw/images/", output_path = "./data/processed", image_shape=(128, 128)):
+    def __init__(self, path_to_base_csv = "./data/raw/train.csv", image_paths = "./data/raw/images/", output_path = "./data/processed", image_shape=config.hyperparameters.image_shape):
 
         self.base_csv_path = path_to_base_csv # TODO: This file should be renamed to data.csv
         self.output_path = output_path
