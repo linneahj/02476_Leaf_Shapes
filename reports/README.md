@@ -72,7 +72,7 @@ end of the project.
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code
+* [x] Write unit tests related to the data part of your code
 * [ ] Write unit tests related to model construction and or model training
 * [ ] Calculate the coverage.
 * [ ] Get some continuous integration running on the github repository
@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- question 1 fill here ---
+--- 48 ---
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- question 2 fill here ---
+--- s194354, s153189, s231733 ---
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
