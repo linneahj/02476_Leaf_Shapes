@@ -1,9 +1,10 @@
+import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
-import matplotlib.pyplot as plt
-'''
+
+"""
 Quick script to visually inspect the data made by make_datset.py, in order to check, that the data generated looks correct
-'''
+"""
 
 
 # Load in training set

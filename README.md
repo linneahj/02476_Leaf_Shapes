@@ -7,7 +7,7 @@ Final project for group 48 in the DTU course 02476 MLOps.
 ## Project description
 
 ### Goal
-The goal of the project is to employ the material presented in this course on a small-scale real-world project, by creating a pipeline for all the stages of a Machine Learning Model's lifecycle including code and data version control, experiment reproducibility, code optimization, testing, debugging and logging. These are all elements of the continuous integration. We also plan to deploy the model using a cloud solution. We aim to monitor the activity of the model after deployment. 
+The goal of the project is to employ the material presented in this course on a small-scale real-world project, by creating a pipeline for all the stages of a Machine Learning Model's lifecycle including code and data version control, experiment reproducibility, code optimization, testing, debugging and logging. These are all elements of the continuous integration. We also plan to deploy the model using a cloud solution. We aim to monitor the activity of the model after deployment.
 We will also examine and evaluate the scalability of the model.
 
 The project in question aims to identify different types of trees by using image classification on images of apple leaves.
