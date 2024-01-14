@@ -33,4 +33,5 @@ def test_data_loaded():
     images = [images for images in glob.iglob(f"{path}/TIMM/*/*") if images.endswith(".png")]
     N_train = 891
     N_test = 99
-    assert len(images) == (N_train + N_test), "Could not find the correct number of processed images"
+    # assert len(images) == (N_train + N_test), "Could not find the correct number of processed images" # Only if also using test images
+    assert len(images) == N_train, "Could not find the correct number of processed images"
