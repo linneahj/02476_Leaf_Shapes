@@ -17,7 +17,8 @@ jobs:
     - name: Build the Training Docker image
       run: |
         echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u linneahj --password-stdin docker.io
-        echo docker build . --file dockerfiles/train_model.dockerfile --tag linneahj/02476_leaf_project:$(date +%s)
-        docker build . --file dockerfiles/train_model.dockerfile --tag linneahj/02476_leaf_project:$(date +%s)
-        echo docker push linneahj/02476_leaf_project:$(date +%s)
-        docker push linneahj/02476_leaf_project:$(date +%s)
+        echo $(date +%s) >tagname.txt
+        echo docker build . --file dockerfiles/train_model.dockerfile --tag linneahj/02476_leaf_project:$(<tagname.txt)
+        docker build . --file dockerfiles/train_model.dockerfile --tag linneahj/02476_leaf_project:$(<tagname.txt)
+        echo docker push linneahj/02476_leaf_project:$(<tagname.txt)
+        docker push linneahj/02476_leaf_project:$(<tagname.txt)
