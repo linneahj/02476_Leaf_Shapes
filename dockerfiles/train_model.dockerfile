@@ -6,12 +6,25 @@ RUN apt update && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
+COPY requirements_dev.txt requirements_dev.txt
 COPY pyproject.toml pyproject.toml
-COPY leaf_shapes/ leaf_shapes/
+COPY leaf_shapes/ ./leaf_shapes/
 COPY data/ data/
-
+COPY Makefile Makefile
+COPY config.yaml config.yaml
 WORKDIR /
-RUN pip install -r requirements.txt --no-cache-dir
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt --no-cache-dir
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements_dev.txt --no-cache-dir
+
 RUN pip install . --no-deps --no-cache-dir
 
-ENTRYPOINT ["python", "-u", "leaf_shapes/train_model.py"]
+# Test to fix "no module found error for models/model.py script"
+ENV PYTHONPATH /
+
+# For dvc data
+RUN dvc init --no-scm
+COPY .dvc/config .dvc/config
+COPY *.dvc *.dvc
+RUN dvc config core.no_scm true
+
+ENTRYPOINT ["make", "train"]
