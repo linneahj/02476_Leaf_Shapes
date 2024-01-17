@@ -76,6 +76,7 @@ The directory structure of the project looks like this:
 │   │   └── visualize.py
 │   ├── train_model.py   <- script for training the model
 │   └── predict_model.py <- script for predicting from a model
+    └── main.py          <- script for FastAPI application that can do inference using a model
 │
 └── LICENSE              <- Open-source license if one is chosen
 ```
