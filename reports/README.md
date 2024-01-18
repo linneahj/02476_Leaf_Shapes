@@ -337,7 +337,9 @@ The image below shows an example of a wandb report made during the project.
 >
 > Answer:
 
---- question 15 fill here ---
+The creation of a docker image for model training is included in the CI workflow, and enables us to train models using our default hyper-parameters in a docker container instead of setting up an environment, which makes the training reproducible. The docker file for the training can be found [here](https://github.com/linneahj/02476_Leaf_Shapes/blob/master/dockerfiles/train_model.dockerfile)  and can be build to an image using `docker build -f dockerfiles/train_model.dockerfile . -t trainer_docker:latest` (or it can be pulled from dockerhub using ` docker pull linneahj/02476_leaf_project:<tag for latest build>`). Once the image has been created, it can be run as a container using `docker run --name experiment1 trainer_docker:latest`. 
+When we were using google drive instead of GCP Buckets, authentication was needed to run the container (we just saved the authentication as an environment variable using the `-e` flag in the `docker run` command), but using data storage in google cloud makes the above command much simpler.
+We also have a docker file for the API [here](https://github.com/linneahj/02476_Leaf_Shapes/blob/master/dockerfiles/model_api.dockerfile). Since the image contains a copy of an already trained model, this means the "prediction app" can be launched ready for use simply by running the container, and it is also the basis for cloud deployment of the model.
 
 ### Question 16
 
