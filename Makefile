@@ -41,8 +41,8 @@ data:
 	dvc pull
 	python $(PROJECT_NAME)/data/make_dataset.py
 
-train: data
-	python $(PROJECT_NAME)/train_model.py ./data/processed/TIMM/ --model resnet18  --epochs 5  --img-size 32
+train:
+	python $(PROJECT_NAME)/train_model.py ./data/processed/TIMM/ --model resnet18  --epochs 5  --img-size 32 --num-classes 99
 
 # Add --log-wandb to the line above to include wandb logging of training
 

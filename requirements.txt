@@ -16,5 +16,6 @@ wandb>=0.16.1
 # For fast api
 python-multipart >= 0.0.6
 fastapi >= 0.1.0
-uvicorn >= 0.26.0
-opencv-python
+uvicorn
+gunicorn
+opencv-python-headless

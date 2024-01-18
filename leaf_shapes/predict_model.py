@@ -6,10 +6,10 @@ import torch
 
 
 class LeafModel:
-    def __init__(self) -> None:
-        model_path = "../models/model_best.pth.tar"  # Model to be used must be placed here after training finishes
+    def __init__(self, model_path, class_ids_path) -> None:
+        # model_path = "../models/model_best.pth.tar"  # Model to be used must be placed here after training finishes
         self.model = timm.create_model("resnet18", pretrained=True, checkpoint_path=model_path, num_classes=99)
-        self.labels = pd.read_csv("../data/processed/Class_ids.csv")["0"].tolist()
+        self.labels = pd.read_csv(class_ids_path)["0"].tolist()
         print(self.model.num_classes)
         print(len(self.labels))
 
@@ -45,6 +45,9 @@ class LeafModel:
 
 
 if __name__ == "__main__":
-    model = LeafModel()
+    model_path = "../models/model_best.pth.tar"
+    class_ids_path = "../data/processed/Class_ids.csv"
+    model = LeafModel(model_path, class_ids_path)
+
     pred = model.predict("../data/processed/TIMM/train/Acer_Capillipes/610.png")
     print(pred)
