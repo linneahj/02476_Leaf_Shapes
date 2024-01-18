@@ -45,55 +45,61 @@ The directory structure of the project looks like this:
 
 ```txt
 
-├── Makefile             <- Makefile with convenience commands like `make data` or `make train`
-├── README.md            <- The top-level README for developers using this project.
+├── Makefile               <- Makefile with convenience commands like `make data` or `make train`
+├── README.md              <- The top-level README for developers using this project.
 ├── data
-│   ├── processed        <- The final, canonical data sets for modeling.
-│   └── raw              <- The original, immutable data dump.
+│   ├── processed          <- The final, canonical data sets for modeling.
+│   └── raw                <- The original, immutable data dump.
 │
-├── docs                 <- Documentation folder
+├── docs                   <- Documentation folder
 │   │
-│   ├── index.md         <- Homepage for your documentation
+│   ├── index.md           <- Homepage for your documentation
 │   │
-│   ├── mkdocs.yml       <- Configuration file for mkdocs
+│   ├── mkdocs.yml         <- Configuration file for mkdocs
 │   │
-│   └── source/          <- Source directory for documentation files
+│   └── source/            <- Source directory for documentation files
 │
-├── models               <- Trained and serialized models, model predictions, or model summaries
+├── models                 <- Trained and serialized models, model predictions, or model summaries
 │
-├── notebooks            <- Jupyter notebooks.
+├── notebooks              <- Jupyter notebooks.
 │
-├── pyproject.toml       <- Project configuration file
+├── pyproject.toml         <- Project configuration file
 │
-├── reports              <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures          <- Generated graphics and figures to be used in reporting
+├── reports                <- Generated analysis as HTML, PDF, LaTeX, etc.
+│   └── figures            <- Generated graphics and figures to be used in reporting
+|   └── README.md          <- Mid-level README containing the report
 │
-├── requirements.txt     <- The requirements file for reproducing the analysis environment
+├── requirements.txt       <- The requirements file for reproducing the analysis environment
 |
-├── requirements_dev.txt <- The requirements file for reproducing the analysis environment
+├── requirements_dev.txt   <- The requirements file for reproducing the development environment
+|
+├── requirements_tests.txt <- The requirements file for reproducing the testing environment
 │
-├── tests                <- Test files
+├── tests                  <- Test files
+│   ├── __init__.py
+│   └── test_data.py       <- Unit tests for the data
 │
-├── leaf_shapes  <- Source code for use in this project.
+├── leaf_shapes            <- Source code for use in this project.
 │   │
-│   ├── __init__.py      <- Makes folder a Python module
+│   ├── __init__.py        <- Makes folder a Python module
 │   │
-│   ├── data             <- Scripts to download or generate data
+│   ├── data               <- Scripts to download or generate data
 │   │   ├── __init__.py
 │   │   └── make_dataset.py
+│   │   └── check_processed_dataset.py
 │   │
-│   ├── models           <- model implementations, training script and prediction script
+│   ├── models             <- model implementations, training script and prediction script
 │   │   ├── __init__.py
 │   │   ├── model.py
 │   │
-│   ├── visualization    <- Scripts to create exploratory and results oriented visualizations
+│   ├── visualization      <- Scripts to create exploratory and results oriented visualizations
 │   │   ├── __init__.py
 │   │   └── visualize.py
-│   ├── train_model.py   <- script for training the model
-│   └── predict_model.py <- script for predicting from a model
-    └── main.py          <- script for FastAPI application that can do inference using a model
+│   ├── train_model.py     <- script for training the model
+│   └── predict_model.py   <- script for predicting from a model
+    └── main.py            <- script for FastAPI application that can do inference using a model
 │
-└── LICENSE              <- Open-source license if one is chosen
+└── LICENSE                <- Open-source license if one is chosen
 ```
 
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
