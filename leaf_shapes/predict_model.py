@@ -8,8 +8,10 @@ import torch
 class LeafModel:
     def __init__(self) -> None:
         model_path = "../models/model_best.pth.tar"  # Model to be used must be placed here after training finishes
-        self.model = timm.create_model("resnet18", pretrained=True, checkpoint_path=model_path, num_classes=1000)
+        self.model = timm.create_model("resnet18", pretrained=True, checkpoint_path=model_path, num_classes=99)
         self.labels = pd.read_csv("../data/processed/Class_ids.csv")["0"].tolist()
+        print(self.model.num_classes)
+        print(len(self.labels))
 
     def eval(self):
         self.model.eval()
@@ -31,6 +33,7 @@ class LeafModel:
 
             output = self.model(t.float().unsqueeze(0))
             probabilities = torch.nn.functional.softmax(output[0], dim=0)
+
             values, indices = torch.topk(probabilities, 5)
 
             result = [self.labels[i] for i in indices]
@@ -43,5 +46,5 @@ class LeafModel:
 
 if __name__ == "__main__":
     model = LeafModel()
-    pred = model.predict("../data/processed/TIMM/Acer_Capillipes/610.png")
+    pred = model.predict("../data/processed/TIMM/train/Acer_Capillipes/610.png")
     print(pred)

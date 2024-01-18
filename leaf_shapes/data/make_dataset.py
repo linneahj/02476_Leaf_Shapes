@@ -122,7 +122,8 @@ class Data_processor:
 
         ids.sort()
         species_df = pd.DataFrame(ids)
-        species_df.to_csv(self.label_csv_path)
+        if train_or_val == "train":
+            species_df.to_csv(self.label_csv_path)
 
     def process(self):
         self._split_into_train_test()
