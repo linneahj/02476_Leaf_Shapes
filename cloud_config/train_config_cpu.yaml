@@ -3,4 +3,4 @@ workerPoolSpecs:
         machineType: n1-highmem-2
     replicaCount: 1
     containerSpec:
-        imageUri: gcr.io/leaf-shapes-02476/train
+        imageUri: eu.gcr.io/leaf-shapes-02476/train
