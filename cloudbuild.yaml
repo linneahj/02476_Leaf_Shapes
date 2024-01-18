@@ -1,12 +1,4 @@
 steps:
-## TRAINING
-# Build the container image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/train:latest', '-f', 'dockerfiles/train_model.dockerfile', '.']
-# Push the container image to Container Registry
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'eu.gcr.io/$PROJECT_ID/train:latest']
-
 ## API
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
@@ -25,3 +17,11 @@ steps:
   - 'gcr.io/$PROJECT_ID/api:latest'
   - '--region'
   - 'europe-west1'
+
+## TRAINING
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/train:latest', '-f', 'dockerfiles/train_model.dockerfile', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/train:latest']
