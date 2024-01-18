@@ -238,7 +238,7 @@ end of the project.
 >
 > Answer:
 
-We did setup DVC for our raw data, although we did not utilize the version control functionality much, since no changes were made to the raw data. Initially we used gdrive as the remote storage, but for the later steps of the project, we also employed a GCP bucket. 
+We did setup DVC for our raw data, although we did not utilize the version control functionality much, since no changes were made to the raw data. Initially we used gdrive as the remote storage, but for the later steps of the project, we also employed a GCP bucket.
 
 Since the ability to store big files in git repositories is limited (and also frowned upon), the raw data normally has to be downloaded from someplace else and placed in the correct folder, when setting up a new instance of the project. Having the raw data tracked using DVC, enables us to store the raw data in one place, and once the repository have been cloned, all the user have to do in order to get the data in the correct directory, is to do `dvc pull`, which is very convenient. However, since we did not change this data, dvc was somewhat under-utilized in the project, as the main appeal of dvc is specifically to do version control. In addition to that, the authentication required to use gdrive as remote storage, did introduce some added complexity to the later parts of the project, for example when running docker containers. Since this project was made on such a limited timeline, this added complexity was costly in the form of hours spent on this, rather than the deployment of models.  If we had had more time, it would also have been an obvious next step to store the models using dvc, since they are also quite large files, and dvc lets us store pointers to any large artifact files, not just data files.
 
@@ -276,8 +276,8 @@ Our CI has been organized in 3 separate files; one makes use of ruff to check th
 >
 > Answer:
 
-We used the training script provided by the TIMM framework, which according to the [official docs](https://huggingface.co/docs/timm/main/en/training_script) has “a variety of training args”. This include number of epochs, input image size, number of classes to predict and whether to use wandb for logging. This means, that training can be easily configured using for example `python leaf_shapes/train_model.py ./data/processed/TIMM/ --model resnet18 --num-classes 99 --epochs 10  --img-size 64 -–log-wandb` to train a model for 10 epochs with wandb logging enabled. 
-The most used version of this is hardcoded in the makefile, such that calling `make data` will result in both the making of training data and subsequently training a resnet18 model on it. 
+We used the training script provided by the TIMM framework, which according to the [official docs](https://huggingface.co/docs/timm/main/en/training_script) has “a variety of training args”. This include number of epochs, input image size, number of classes to predict and whether to use wandb for logging. This means, that training can be easily configured using for example `python leaf_shapes/train_model.py ./data/processed/TIMM/ --model resnet18 --num-classes 99 --epochs 10  --img-size 64 -–log-wandb` to train a model for 10 epochs with wandb logging enabled.
+The most used version of this is hardcoded in the makefile, such that calling `make data` will result in both the making of training data and subsequently training a resnet18 model on it.
 For the data, we did set up hydra as well, though since it became obsolete for the training, it would probably have been nicer to just use a simple argparser for `make_data.py` as well instead, as that would have enabled us to streamline the make-file better.
 
 ### Question 13
@@ -293,7 +293,7 @@ For the data, we did set up hydra as well, though since it became obsolete for t
 >
 > Answer:
 
-Since we used the training script provided by the TIMM framework, the training script automatically saved both it’s corresponding config-file and a log of training loss, evaluation loss, learning rate etc. for each epoch, together with checkpoints of the model during the last couple of epochs, as well as the current best performing model.  This is very useful, since it enables us to see, exactly what hyperparameters, our model was trained with. In order to reproduce an experiment, the parameters from the config-file can then be set to exactly the same. In an ideal world, the training script should be able to take the entire config-file as argument, to make it even easier to repeat an experiment, but we did not have time to look up, how to do that using TIMM. 
+Since we used the training script provided by the TIMM framework, the training script automatically saved both it’s corresponding config-file and a log of training loss, evaluation loss, learning rate etc. for each epoch, together with checkpoints of the model during the last couple of epochs, as well as the current best performing model.  This is very useful, since it enables us to see, exactly what hyperparameters, our model was trained with. In order to reproduce an experiment, the parameters from the config-file can then be set to exactly the same. In an ideal world, the training script should be able to take the entire config-file as argument, to make it even easier to repeat an experiment, but we did not have time to look up, how to do that using TIMM.
 In order to save as much information as possible, we also used wandb for logging, and in addition to logging training loss, validation loss etc, it also saves a requirement file with all packages needed to rerun the experiment, as well as a yaml-file with the corresponding conda enviroment.
 It would have been nice to also save the configuration of the data processor (which in practice just meant the size, the images were resized to, which could also be seen from the size of the model), but this information was also saved both by wandb and by TIMM, so the most elegant solution would probably be to not use hydra at all.
 
@@ -313,14 +313,14 @@ It would have been nice to also save the configuration of the data processor (wh
 >
 > Answer:
 
-A staple in graphs to be logged in machine learning, is the loss graph, as can be seen in the image below (update to a longer training run if time). Logging loss is important, as that shows us how well the model is learning. When also taking the validation loss into account, we can also use the graph to look for signs of overfitting. 
+A staple in graphs to be logged in machine learning, is the loss graph, as can be seen in the image below (update to a longer training run if time). Logging loss is important, as that shows us how well the model is learning. When also taking the validation loss into account, we can also use the graph to look for signs of overfitting.
 
 
 
-Another example of logged data specific to this project is the learning rate. Since we are using a TIMM resnet18 which we haven’t spend much time optimizing, we have kept the standard configuration for the learning rate. The learning rate is therefore not static, but uses both a decay rate for the learning rate and a warm-up learning rate. Having never used a non-static learning rate before, it is therefore also relevant to track the learning rate. 
+Another example of logged data specific to this project is the learning rate. Since we are using a TIMM resnet18 which we haven’t spend much time optimizing, we have kept the standard configuration for the learning rate. The learning rate is therefore not static, but uses both a decay rate for the learning rate and a warm-up learning rate. Having never used a non-static learning rate before, it is therefore also relevant to track the learning rate.
 
-In general, many different metrics can be relevant for the project, depending on the goal of the project. Our project for example logs both validation accuracy for the target matching the models top 1 prediction and for target being in the top 5 most likely species. Our data set includes subspecies such as Tilia Oliveri and Tilia Platyphyllos, so accuracy for the top 5 may be relevant, if the model for example have trouble telling subspecies apart, but still chooses correctly within the broader category. 
-Apart from hyperparameters and metrics such as accuracy being worth tracking, wandb also offers support to track system variables. If for example our model is so big, it requires downsampling of the images to run on our GPU, it would be relevant to track RAM usage for the training of our model. This could also be relavant, if we needed to know, what it what require to train the model on another machine. 
+In general, many different metrics can be relevant for the project, depending on the goal of the project. Our project for example logs both validation accuracy for the target matching the models top 1 prediction and for target being in the top 5 most likely species. Our data set includes subspecies such as Tilia Oliveri and Tilia Platyphyllos, so accuracy for the top 5 may be relevant, if the model for example have trouble telling subspecies apart, but still chooses correctly within the broader category.
+Apart from hyperparameters and metrics such as accuracy being worth tracking, wandb also offers support to track system variables. If for example our model is so big, it requires downsampling of the images to run on our GPU, it would be relevant to track RAM usage for the training of our model. This could also be relavant, if we needed to know, what it what require to train the model on another machine.
 
 ### Question 15
 
