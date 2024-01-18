@@ -23,6 +23,12 @@ We are working with the dataset for the [Leaf Classification Competition](https:
 ### Models
 Since we are working with images, an obvious starting point is to create a CNN. For this we can make use of the ResNet18 architecture from TIMM, which is a convolutional neural network architecture and scaling method. However, we are quite restricted by the processing power on our personal computers, as mentioned earlier.
 
+## Usage
+### Build docker image
+`docker build -f dockerfiles/train_model.dockerfile . -t trainer_docker:latest`
+
+### Run docker image
+`docker run --name experiment1 trainer_docker:latest`
 
 ## Project structure
 

@@ -9,7 +9,6 @@ COPY requirements.txt requirements.txt
 COPY requirements_dev.txt requirements_dev.txt
 COPY pyproject.toml pyproject.toml
 COPY leaf_shapes/ ./leaf_shapes/
-COPY data/ data/
 COPY Makefile Makefile
 COPY config.yaml config.yaml
 WORKDIR /
@@ -24,7 +23,7 @@ ENV PYTHONPATH /
 # For dvc data
 RUN dvc init --no-scm
 COPY .dvc/config .dvc/config
-COPY *.dvc *.dvc
+COPY data/ data/
 RUN dvc config core.no_scm true
 
 ENTRYPOINT ["make", "train"]
