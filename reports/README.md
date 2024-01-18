@@ -293,7 +293,8 @@ For the data, we did set up hydra as well, though since it became obsolete for t
 >
 > Answer:
 
---- question 13 fill here ---
+Since we used the training script provided by the TIMM framework, the training script automatically saved both it’s corresponding config-file and a log of training loss, evaluation loss, learning rate etc. for each epoch, together with checkpoints of the model during the last couple of epochs, as well as the current best performing model.  This is very useful, since it enables us to see, exactly what hyperparameters, our model was trained with. In order to reproduce an experiment, the parameters from the config file can then be set to exactly the same. In an ideal world, the training script should be able to take the entire config file as argument, to make it even easier to repeat an experiment, but we did not have time to look up, how to do that using TIMM. 
+In order to save as much information as possible, we also used wandb for logging, see next question. However, to completely save all our information, it would have been useful to also save the configuration of the data processor (which in practice just meant the size, the images were resized to, which could also be seen from the size of the model), and had this project gone on for longer, we would have made a more elegant solution for that.
 
 ### Question 14
 
