@@ -321,6 +321,8 @@ Another example of logged data specific to this project is the learning rate. Si
 
 In general, many different metrics can be relevant for the project, depending on the goal of the project. Our project for example logs both validation accuracy for the target matching the models top 1 prediction and for target being in the top 5 most likely species. Our data set includes subspecies such as Tilia Oliveri and Tilia Platyphyllos, so accuracy for the top 5 may be relevant, if the model for example have trouble telling subspecies apart, but still chooses correctly within the broader category. 
 Apart from hyperparameters and metrics such as accuracy being worth tracking, wandb also offers support to track system variables. If for example our model is so big, it requires downsampling of the images to run on our GPU, it would be relevant to track RAM usage for the training of our model. This could also be relavant, if we needed to know, what it what require to train the model on another machine. 
+The image below shows an example of a wandb report made during the project.
+![id](https://github.com/linneahj/02476_Leaf_Shapes/blob/master/reports/figures/Screenshot_20240118_220327.png)
 
 ### Question 15
 
@@ -350,7 +352,7 @@ Apart from hyperparameters and metrics such as accuracy being worth tracking, wa
 >
 > Answer:
 
---- question 16 fill here ---
+Debugging was performed in various ways. The old school print statement was often used, and on occasion also the build in debugger is VS Code. Often the starting point would be the error message and then working backwards from there, reading the documentation of TIMM or Docker or whatever framework was giving us trouble. We did unfortunately not have time to do any profiling of our code.
 
 ## Working in the cloud
 
