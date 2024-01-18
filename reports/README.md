@@ -276,7 +276,9 @@ Our CI has been organized in 3 separate files; one makes use of ruff to check th
 >
 > Answer:
 
---- question 12 fill here ---
+We used the training script provided by the TIMM framework, which according to the [official docs](https://huggingface.co/docs/timm/main/en/training_script) has “a variety of training args”. This include number of epochs, input image size, number of classes to predict and whether to use wandb for logging. This means, that training can be easily configured using for example `python leaf_shapes/train_model.py ./data/processed/TIMM/ --model resnet18 --num-classes 99 --epochs 10  --img-size 64 -–log-wandb` to train a model for 10 epochs with wandb logging enabled. 
+The most used version of this is hardcoded in the makefile, such that calling `make data` will result in both the making of training data and subsequently training a resnet18 model on it. 
+For the data, we did set up hydra as well, though since it became obsolete for the training, it would probably have been nicer to just use a simple argparser for `make_data.py` as well instead, as that would have enabled us to streamline the make-file better.
 
 ### Question 13
 
