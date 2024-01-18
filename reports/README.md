@@ -404,7 +404,7 @@ Debugging was performed in various ways. The old school print statement was ofte
 >
 > Answer:
 
---- question 20 fill here ---
+Our GCP container registry is shown here: ![id](https://github.com/linneahj/02476_Leaf_Shapes/blob/master/reports/figures/gcp_container_registry.png)
 
 ### Question 21
 
