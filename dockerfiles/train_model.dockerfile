@@ -12,8 +12,8 @@ COPY leaf_shapes/ ./leaf_shapes/
 COPY Makefile Makefile
 COPY config.yaml config.yaml
 WORKDIR /
-RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt --no-cache-dir
-RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements_dev.txt --no-cache-dir
+RUN pip install -r requirements.txt --no-cache-dir
+RUN pip install -r requirements_dev.txt --no-cache-dir
 
 RUN pip install . --no-deps --no-cache-dir
 

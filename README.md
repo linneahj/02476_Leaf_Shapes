@@ -30,6 +30,15 @@ Since we are working with images, an obvious starting point is to create a CNN. 
 ### Run docker image
 `docker run --name experiment1 trainer_docker:latest`
 
+### Train model in the cloud
+```
+gcloud ai custom-jobs create \
+    --region=europe-west1 \
+    --display-name=test-run \
+    --config=cloud_config/train_config_cpu.yaml
+```
+
+
 ## Project structure
 
 The directory structure of the project looks like this:
