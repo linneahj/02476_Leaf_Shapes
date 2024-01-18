@@ -17,3 +17,4 @@ wandb>=0.16.1
 python-multipart >= 0.0.6
 fastapi >= 0.1.0
 uvicorn >= 0.26.0
+cv2 >= 4.9.0
