@@ -493,7 +493,8 @@ Our GCP container registry is shown here: ![id](https://github.com/linneahj/0247
 >
 > Answer:
 
---- question 26 fill here ---
+There were many struggles in this project. We got off to a rocky start, as we were too ambitious and the data set and model, we initially choose, turned out to be too big to run locally on our pcs, and so we had to start over from scratch. The main source of frustration however was GCP, where many, many hours were spend in vain. Docker also introduced some troubles, especially with the authentication-issues. For this, the internet was a great help, although many hours still were spend with not much progress to show. We also had a bug resulting in models of the wrong size, which was very hard to pin down, as none of the usual debug tools were of much help there. 
+On a more practical level, illness meant at least one of us was off sick almost every project day, with first one person falling sick, then another, making the workload even bigger. Over all, the motto of this project has been “Slow Progress!”
 
 ### Question 27
 
