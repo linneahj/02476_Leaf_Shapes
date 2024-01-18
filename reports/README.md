@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- question 3 fill here ---
+--- We chose to work with the third-party framework Pytorch Image Models (TIMM) as this framework is well suited for image classification. The framework contains various advanced and well-performing neural networks with pretrained weights. Using this therefore enabled us to quickly have a functional model. From the framework we specifically used the pretrained ResNet18 as our machine learning model, along with their integration of Weights and Biases into the training of the network. ---
 
 ## Coding environment
 
