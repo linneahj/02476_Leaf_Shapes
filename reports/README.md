@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- 48 ---
+48
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- s194354, s153189, s231733 ---
+*s194354, s153189, s231733*
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- We chose to work with the third-party framework Pytorch Image Models (TIMM) as this framework is well suited for image classification. The framework contains various advanced and well-performing neural networks with pretrained weights. Using this therefore enabled us to quickly have a functional model. From the framework we specifically used the pretrained ResNet18 as our machine learning model, along with their integration of Weights and Biases into the training of the network. ---
+*We chose to work with the third-party framework Pytorch Image Models (TIMM) as this framework is well suited for image classification. The framework contains various advanced and well-performing neural networks with pretrained weights. Using this therefore enabled us to quickly have a functional model. From the framework we specifically used the pretrained ResNet18 as our machine learning model, along with their integration of Weights and Biases into the training of the network.*
 
 ## Coding environment
 
@@ -148,7 +148,7 @@ end of the project.
 >
 > Answer:
 
---- question 4 fill here ---
+--- For managing our dependencies we mainly used the built-in pip-command "pip freeze > requirements.txt" along with manually checking if this was adequate. ---
 
 ### Question 5
 
@@ -163,7 +163,7 @@ end of the project.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+*As seen in the top-level README, we used the cookiecutter template for the project. From the MLOps template we have used the data folder (with subfolders "raw" and "processed") and filled out the tests and reports folders. In the <Project name> folder we have filled out the data and models subfolders. We did not use any notebooks in our project, and therefore this folder was removed. Additionally we have included a .dvc folder for the dvc setup. a .github/workflows folder for the automatic testing and a dockerfiles folder for the docker setup.*
 
 ### Question 6
 
@@ -174,7 +174,7 @@ end of the project.
 >
 > Answer:
 
---- question 6 fill here ---
+*To ensure consistent formatting of the code we used ruff on the project. We also implemented ruff in the pre-compilation. Both for our own respective sakes and the sake of our group as a unit, we have tried to document the code adequately in order for each of us to quickly be able to understand what is happening in a particular section of code. This is especially important in larger projects with large teams of developers and for projects which run for long periods of time, as the person who originally wrote a section of code might not be involved with the project at all. This also goes for typing, which can be quite helpful for changes in functions.*
 
 ## Version control
 
