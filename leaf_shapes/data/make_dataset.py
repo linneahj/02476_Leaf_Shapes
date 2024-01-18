@@ -107,7 +107,7 @@ class Data_processor:
             base_path1 = output_path + "/TIMM/"
             base_path2 = base_path1 + train_or_val
             path = base_path2 + f"/{species}"
-            print(path)
+            # print(path)
             if not os.path.exists(base_path1):
                 os.mkdir(base_path1)
 

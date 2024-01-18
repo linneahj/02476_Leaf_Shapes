@@ -46,6 +46,9 @@ train: data
 
 # Add --log-wandb to the line above to include wandb logging of training
 
+run_api: data
+	gunicorn -b 127.0.0.1:8080 -w 1 -k uvicorn.workers.UvicornWorker leaf_shapes.main:app
+
 #################################################################################
 # Documentation RULES                                                           #
 #################################################################################

@@ -26,7 +26,5 @@ COPY data/ data/
 COPY models/ models/
 RUN dvc config core.no_scm true
 
-RUN make data
-
 EXPOSE $PORT
-CMD exec gunicorn -w 1 -k uvicorn.workers.UvicornWorker leaf_shapes.main:app
+ENTRYPOINT ["make", "run_api"]
