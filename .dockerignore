@@ -1,0 +1,3 @@
+/data/processed/*
+/data/raw/*
+!**/*.dvc
