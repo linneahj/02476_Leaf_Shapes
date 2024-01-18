@@ -313,7 +313,14 @@ It would have been nice to also save the configuration of the data processor (wh
 >
 > Answer:
 
---- question 14 fill here ---
+A staple in graphs to be logged in machine learning, is the loss graph, as can be seen in the image below (update to a longer training run if time). Logging loss is important, as that shows us how well the model is learning. When also taking the validation loss into account, we can also use the graph to look for signs of overfitting. 
+
+
+
+Another example of logged data specific to this project is the learning rate. Since we are using a TIMM resnet18 which we haven’t spend much time optimizing, we have kept the standard configuration for the learning rate. The learning rate is therefore not static, but uses both a decay rate for the learning rate and a warm-up learning rate. Having never used a non-static learning rate before, it is therefore also relevant to track the learning rate. 
+
+In general, many different metrics can be relevant for the project, depending on the goal of the project. Our project for example logs both validation accuracy for the target matching the models top 1 prediction and for target being in the top 5 most likely species. Our data set includes subspecies such as Tilia Oliveri and Tilia Platyphyllos, so accuracy for the top 5 may be relevant, if the model for example have trouble telling subspecies apart, but still chooses correctly within the broader category. 
+Apart from hyperparameters and metrics such as accuracy being worth tracking, wandb also offers support to track system variables. If for example our model is so big, it requires downsampling of the images to run on our GPU, it would be relevant to track RAM usage for the training of our model. This could also be relavant, if we needed to know, what it what require to train the model on another machine. 
 
 ### Question 15
 
