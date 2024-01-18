@@ -1,0 +1,9 @@
+outs:
+- md5: 20bfae6d942b4deaacdc07621fc57d3d
+  size: 89917698
+  hash: md5
+  path: model_best.pth.tar
+  cloud:
+    remote_storage:
+      etag: 08f0eff6c0c8e783031001
+      version_id: '1705602516367344'
