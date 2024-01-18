@@ -179,3 +179,5 @@ cython_debug/
 /data/processed/
 /wandb
 /output
+*.pth
+*.tar

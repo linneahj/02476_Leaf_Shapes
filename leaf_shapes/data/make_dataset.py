@@ -44,6 +44,7 @@ class Data_processor:
 
         self.training_csv_path = output_path + "/labelled_training_data.csv"
         self.test_csv_path = output_path + "/labelled_test_data.csv"
+        self.label_csv_path = output_path + "/Class_ids.csv"
 
         self.train_df = None  # Dataframes holding raw data - set in make _split_into_train_test
         self.test_df = None  # Dataframes holding raw data - set in make _split_into_train_test
@@ -90,9 +91,12 @@ class Data_processor:
 
         return train_df, test_df
 
-    def _create_data(self, df, output_path, image_shape):
+    def _create_data(self, df, output_path, image_shape, train_or_val="train"):
         """loads all images in df, processes them and saves in given path"""
+        ids = []
         for _, (id, species, path) in df.iterrows():
+            if species not in ids:
+                ids.append(species)
             image = imread(path, as_gray=True)  # load image
 
             # Process
@@ -100,10 +104,15 @@ class Data_processor:
             image = resize(image, output_shape=image_shape, mode="reflect", anti_aliasing=True)
             # image = np.expand_dims(image, axis=0)
 
-            base_path = output_path + "/TIMM/"
-            path = output_path + f"/TIMM/{species}"
-            if not os.path.exists(base_path):
-                os.mkdir(base_path)
+            base_path1 = output_path + "/TIMM/"
+            base_path2 = base_path1 + train_or_val
+            path = base_path2 + f"/{species}"
+            print(path)
+            if not os.path.exists(base_path1):
+                os.mkdir(base_path1)
+
+            if not os.path.exists(base_path2):
+                os.mkdir(base_path2)
 
             if not os.path.exists(path):
                 os.mkdir(path)
@@ -111,11 +120,16 @@ class Data_processor:
             # plt.imshow(image, cmap="gray")
             plt.imsave(path + f"/{id}.png", image, cmap="gray")
 
+        ids.sort()
+        species_df = pd.DataFrame(ids)
+        if train_or_val == "train":
+            species_df.to_csv(self.label_csv_path)
+
     def process(self):
         self._split_into_train_test()
-        self._create_data(self.train_df, self.output_path, self.image_shape)
+        self._create_data(self.train_df, self.output_path, self.image_shape, "train")
         # If test also
-        # self.__create_data(self.train_df, self.output_path + '/test_images', self.image_shape)
+        self._create_data(self.test_df, self.output_path, self.image_shape, "val")
 
 
 if __name__ == "__main__":

@@ -26,12 +26,14 @@ def test_data_loaded():
     ), "Could not find the labelled test data csv-file"
 
     # Checking the images
-    subfolders = [f.name for f in os.scandir(os.path.join(path, "TIMM")) if f.is_dir()]
+    subfolders = [f.name for f in os.scandir(os.path.join(path, "TIMM/train")) if f.is_dir()]
     assert len(subfolders) == 99, "Incorrect number of classes found."
 
     print(os.listdir(path))
-    images = [images for images in glob.iglob(f"{path}/TIMM/*/*") if images.endswith(".png")]
+    images = [images for images in glob.iglob(f"{path}/TIMM/*/*/*") if images.endswith(".png")]
     N_train = 891
     N_test = 99
-    # assert len(images) == (N_train + N_test), "Could not find the correct number of processed images" # Only if also using test images
-    assert len(images) == N_train, "Could not find the correct number of processed images"
+    assert len(images) == (
+        N_train + N_test
+    ), "Could not find the correct number of processed images"  # Only if also using test images
+    # assert len(images) == N_train, "Could not find the correct number of processed images"
