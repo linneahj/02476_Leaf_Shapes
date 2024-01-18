@@ -238,7 +238,10 @@ end of the project.
 >
 > Answer:
 
---- question 10 fill here ---
+We did setup DVC for our raw data, although we did not utilize the version control functionality much, since no changes were made to the raw data. Initially we used gdrive as the remote storage, but for the later steps of the project, we also employed a GCP bucket. 
+
+Since the ability to store big files in git repositories is limited (and also frowned upon), the raw data normally has to be downloaded from someplace else and placed in the correct folder, when setting up a new instance of the project. Having the raw data tracked using DVC, enables us to store the raw data in one place, and once the repository have been cloned, all the user have to do in order to get the data in the correct directory, is to do `dvc pull`, which is very convenient. However, since we did not change this data, dvc was somewhat under-utilized in the project, as the main appeal of dvc is specifically to do version control. In addition to that, the authentication required to use gdrive as remote storage, did introduce some added complexity to the later parts of the project, for example when running docker containers. Since this project was made on such a limited timeline, this added complexity was costly in the form of hours spent on this, rather than the deployment of models.  If we had had more time, it would also have been an obvious next step to store the models using dvc, since they are also quite large files, and dvc lets us store pointers to any large artifact files, not just data files.
+
 
 ### Question 11
 
