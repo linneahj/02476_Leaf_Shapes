@@ -73,7 +73,8 @@ except ImportError as e:
 import hydra
 from omegaconf import OmegaConf
 
-from leaf_shapes.models.model import create_model
+# from leaf_shapes.models.model import create_model
+from timm.models import create_model
 
 # Importing hyperparameters (config)
 config = OmegaConf.load("config.yaml")
@@ -653,10 +654,10 @@ def main():
 
     # factory_kwargs = {}
     # if args.pretrained_path:
-    # merge with pretrained_cfg of model, 'file' has priority over 'url' and 'hf_hub'.
-    #    factory_kwargs['pretrained_cfg_overlay'] = dict(
-    #        file=args.pretrained_path,
-    #        num_classes=-1,  # force head adaptation
+    #     # merge with pretrained_cfg of model, 'file' has priority over 'url' and 'hf_hub'.
+    #     factory_kwargs['pretrained_cfg_overlay'] = dict(
+    #     file=args.pretrained_path,
+    #     num_classes=-1,  # force head adaptation
     #    )
 
     model = create_model(
