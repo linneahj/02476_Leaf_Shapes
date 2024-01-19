@@ -24,6 +24,27 @@ We are working with the dataset for the [Leaf Classification Competition](https:
 Since we are working with images, an obvious starting point is to create a CNN. For this we can make use of the ResNet18 architecture from TIMM, which is a convolutional neural network architecture and scaling method. However, we are quite restricted by the processing power on our personal computers, as mentioned earlier.
 
 ## Usage
+### Local setup
+To setup the environment locally first clone the github repository and then run
+
+```
+    make requirements
+    make dev_requirements
+    make data
+```
+
+To train the default model you can use
+```
+    make train
+```
+
+or run it manually with other parameters. The call to the training script executed by the "make train" command is
+```
+    python leaf_shapes/train_model.py ./data/processed/TIMM/ --model resnet18  --epochs 5  --img-size 32 --num-classes 99
+```
+
+Use of Weights and Biases for logging can be toggled by adding `--log-wandb` to the command-line arguments.
+
 ### Build docker image
 `docker build -f dockerfiles/train_model.dockerfile . -t trainer_docker:latest`
 
