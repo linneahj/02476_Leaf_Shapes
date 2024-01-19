@@ -26,8 +26,15 @@ steps:
 
 ## TRAINING
 # Build the container image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/train:latest', '-f', 'dockerfiles/train_model.dockerfile', '.']
+- name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+  - --dockerfile=dockerfiles/train_model.dockerfile
+  - --destination=eu.gcr.io/$PROJECT_ID/train:latest
+  - --cache=true
+  - --cache-ttl=6h
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/$PROJECT_ID/train:latest']
+
+options:
+  machineType: 'N1_HIGHCPU_8'
