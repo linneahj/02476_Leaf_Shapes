@@ -49,6 +49,12 @@ train: data
 run_api: data
 	gunicorn -b 0.0.0.0:8080 -w 1 -k uvicorn.workers.UvicornWorker leaf_shapes.main:app
 
+train_cloud:
+	gcloud ai custom-jobs create \
+    --region=europe-west1 \
+    --display-name=test-run \
+    --config=cloud_config/train_config_cpu.yaml
+
 #################################################################################
 # Documentation RULES                                                           #
 #################################################################################
