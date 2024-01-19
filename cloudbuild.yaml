@@ -1,5 +1,15 @@
 steps:
 ## API
+# # Build the container image
+# - name: 'gcr.io/kaniko-project/executor:latest'
+#   args:
+#   - --dockerfile=dockerfiles/model_api.dockerfile
+#   - --destination=eu.gcr.io/$PROJECT_ID/api:latest
+#   - --cache=true
+#   - --cache-ttl=XXh
+# # Push the container image to Container Registry
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['push', 'eu.gcr.io/$PROJECT_ID/api:latest']
 # Deploy container image to Cloud Run
 - name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
@@ -12,6 +22,7 @@ steps:
   - '--region'
   - 'europe-west1'
   - '--allow-unauthenticated'
+  - '--memory 4G'
 
 ## TRAINING
 # Build the container image
