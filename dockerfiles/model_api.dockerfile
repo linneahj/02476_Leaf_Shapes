@@ -7,17 +7,24 @@ RUN apt update && \
 
 WORKDIR /
 COPY requirements.txt requirements.txt
+COPY requirements_dev.txt requirements_dev.txt
 RUN pip install -r requirements.txt --no-cache-dir
+RUN pip install -r requirements_dev.txt --no-cache-dir
 
 COPY pyproject.toml pyproject.toml
 COPY leaf_shapes/ leaf_shapes/
+COPY Makefile Makefile
+COPY config.yaml config.yaml
 RUN pip install . --no-deps --no-cache-dir
 
-COPY models/model_best.pth.tar model_best.pth.tar
-COPY data/processed/Class_ids.csv Class_ids.csv
+ENV PYTHONPATH /
 
-ENV MODEL_PATH=/model_best.pth.tar
-ENV CLASS_IDS_PATH=/Class_ids.csv
+# For dvc data
+RUN dvc init --no-scm
+COPY .dvc/config .dvc/config
+COPY data/ data/
+COPY models/ models/
+RUN dvc config core.no_scm true
 
 EXPOSE $PORT
-CMD exec gunicorn -w 4 -k uvicorn.workers.UvicornWorker leaf_shapes.main:app
+ENTRYPOINT ["make", "run_api"]

@@ -1,18 +1,30 @@
 steps:
+## API
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/api:latest', '-f', 'dockerfiles/model_api.dockerfile', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/api:latest']
+# Deploy container image to Cloud Run
+- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'leaf-shapes'
+  - '--image'
+  - 'eu.gcr.io/$PROJECT_ID/api:latest'
+  - '--region'
+  - 'europe-west1'
+  - '--memory'
+  - '4G'
+  - '--allow-unauthenticated'
+
+## TRAINING
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/train:latest', '-f', 'dockerfiles/train_model.dockerfile', '.']
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/$PROJECT_ID/train:latest']
-# Deploy container image to Cloud Run
-# - name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: gcloud
-#   args:
-#   - 'run'
-#   - 'deploy'
-#   - 'leaf-shapes'
-#   - '--image'
-#   - 'gcr.io/$PROJECT_ID/train:latest'
-#   - '--region'
-#   - 'europe-west1'

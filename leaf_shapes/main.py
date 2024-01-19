@@ -7,8 +7,8 @@ from leaf_shapes.predict_model import LeafModel
 
 app = FastAPI()
 
-model_path = os.getenv("MODEL_PATH", "../models/model_best.pth.tar")
-class_ids_path = os.getenv("CLASS_IDS_PATH", "../data/processed/Class_ids.csv")
+model_path = os.getenv("MODEL_PATH", "./models/model_best.pth.tar")
+class_ids_path = os.getenv("CLASS_IDS_PATH", "./data/processed/Class_ids.csv")
 print(model_path)
 print(class_ids_path)
 
