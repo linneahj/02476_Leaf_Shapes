@@ -17,8 +17,9 @@ steps:
   - 'eu.gcr.io/$PROJECT_ID/api:latest'
   - '--region'
   - 'europe-west1'
+  - '--memory'
+  - '4G'
   - '--allow-unauthenticated'
-  - '--memory 4G'
 
 ## TRAINING
 # Build the container image
